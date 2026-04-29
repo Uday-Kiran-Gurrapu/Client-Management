@@ -94,6 +94,7 @@ export default function ClientDetail({
   const [contactForm, setContactForm] = useState(emptyContact);
   const [editingContact, setEditingContact] = useState<Contact | null>(null);
   const [deleteContactConfirm, setDeleteContactConfirm] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState('');
 
   // Contract state
   const [contractMode, setContractMode] = useState<'view' | 'edit'>('view');
@@ -113,7 +114,13 @@ export default function ClientDetail({
   const [deleteClientConfirm, setDeleteClientConfirm] = useState(false);
 
   // ── Contact handlers ──────────────────────────────
+  function validateEmail(email: string): boolean {
+    if (!email) return true;
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
   function handleContactField(field: keyof typeof emptyContact, value: string) {
+    if (field === 'email') setEmailError('');
     if (editingContact) setEditingContact({ ...editingContact, [field]: value });
     else setContactForm({ ...contactForm, [field]: value });
   }
@@ -121,16 +128,20 @@ export default function ClientDetail({
   function handleAddContact(e: React.SyntheticEvent) {
     e.preventDefault();
     if (!contactForm.name.trim()) return;
+    if (!validateEmail(contactForm.email)) { setEmailError('Please enter a valid email address.'); return; }
     onAddContact(contactForm);
     setContactForm(emptyContact);
     setShowContactForm(false);
+    setEmailError('');
   }
 
   function handleUpdateContact(e: React.SyntheticEvent) {
     e.preventDefault();
     if (!editingContact || !editingContact.name.trim()) return;
+    if (!validateEmail(editingContact.email)) { setEmailError('Please enter a valid email address.'); return; }
     onUpdateContact(editingContact);
     setEditingContact(null);
+    setEmailError('');
   }
 
   // ── Rename handler ────────────────────────────────
@@ -384,6 +395,7 @@ export default function ClientDetail({
               <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Email</label>
               <input type="email" placeholder="email@example.com" value={currentContactForm.email}
                 onChange={(e) => handleContactField('email', e.target.value)} className={input} />
+              {emailError && <p className="text-xs text-red-500 mt-1">{emailError}</p>}
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Phone</label>
