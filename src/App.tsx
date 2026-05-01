@@ -15,7 +15,7 @@ function Header({ dark, onToggleDark }: { dark: boolean; onToggleDark: () => voi
           <span className="text-white font-black text-base tracking-tighter leading-none">LA</span>
         </div>
         <div>
-          <h1 className="text-white font-bold text-xl leading-tight tracking-tight">LA Creative Marketing</h1>
+          <h1 className="text-white font-bold text-xl leading-tight tracking-tight">LA Creative Marketing LLC</h1>
           <p className="text-white/60 text-xs mt-0.5 tracking-wide uppercase">Client Management</p>
         </div>
         <div className="ml-auto flex items-center gap-3">
